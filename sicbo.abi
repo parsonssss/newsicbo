@@ -1,0 +1,152 @@
+{
+    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT Sat Mar  9 06:31:16 2019",
+    "version": "eosio::abi/1.1",
+    "structs": [
+        {
+            "name": "dice",
+            "base": "",
+            "fields": [
+                {
+                    "name": "face",
+                    "type": "uint8"
+                }
+            ]
+        },
+        {
+            "name": "gambling",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key",
+                    "type": "uint64"
+                },
+                {
+                    "name": "value",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "nextround",
+            "base": "",
+            "fields": []
+        },
+        {
+            "name": "pause",
+            "base": "",
+            "fields": []
+        },
+        {
+            "name": "resume",
+            "base": "",
+            "fields": []
+        },
+        {
+            "name": "stake",
+            "base": "",
+            "fields": [
+                {
+                    "name": "_sym",
+                    "type": "symbol"
+                },
+                {
+                    "name": "_player",
+                    "type": "name"
+                },
+                {
+                    "name": "_stake",
+                    "type": "uint16[]"
+                }
+            ]
+        },
+        {
+            "name": "start",
+            "base": "",
+            "fields": []
+        },
+        {
+            "name": "stop",
+            "base": "",
+            "fields": []
+        },
+        {
+            "name": "transfer",
+            "base": "",
+            "fields": [
+                {
+                    "name": "from",
+                    "type": "name"
+                },
+                {
+                    "name": "to",
+                    "type": "name"
+                },
+                {
+                    "name": "amount",
+                    "type": "asset"
+                },
+                {
+                    "name": "memo",
+                    "type": "string"
+                }
+            ]
+        }
+    ],
+    "types": [],
+    "actions": [
+        {
+            "name": "dice",
+            "type": "dice",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "nextround",
+            "type": "nextround",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "pause",
+            "type": "pause",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "resume",
+            "type": "resume",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "start",
+            "type": "start",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "stop",
+            "type": "stop",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "transfer",
+            "type": "transfer",
+            "ricardian_contract": ""
+        }
+    ],
+    "tables": [
+        {
+            "name": "gambling",
+            "type": "gambling",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "stake",
+            "type": "stake",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "variants": [],
+    "abi_extensions": []
+}
