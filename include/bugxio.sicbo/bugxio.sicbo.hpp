@@ -24,7 +24,7 @@ public:
 	[[eosio::action]] void resume();
 
 private:
-    void betStart(name player, asset quantity,vector<uint8_t> playload);
+    void aaaa(name player, asset quantity,vector<uint8_t> playload);
     void checkSymbolCode(const asset& quantity);
     int checkAndChange(string item);
     void payForInviter();

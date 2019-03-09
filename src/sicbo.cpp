@@ -68,29 +68,30 @@ void sicbo::transfer(name from,name to,asset quanity,string memo){
     pieces.pop_back();
 
     //检查每个注是否为数字并验证下注金额与实际金额是否相同
+    //TODO deal with float 0.2EOS
     int totalAmount = 0;
-    for(const auto& each : pieces){
+    for(string each : pieces){
 	eosio_assert(sicbo::isNum(each),"bet in but not a number");
         int temp = sicbo::checkAndChange(each);
 	eosio_assert(temp > 0,"Invalid money!");
         totalAmount += temp;
 	playload.push_back(temp);
     }
+
     eosio_assert(totalAmount == (amt / 10000.0),"not match bet money");
     print("totalAmount->",totalAmount);
 
-    //TODO limit the min and the max range
+    //limit the min and the max range
     eosio_assert(totalAmount <= 100 && totalAmount >= 0.2,"money must between 0.2 and 100");
     
 
-    //TODO 记录每次下注金额,计算当前期数的下注总金额
+    //记录每次下注金额,计算当前期数的下注总金额
     print("check the bet limit in single round");
     auto currentRound = _gambling_table.find(ROUND);
     bool whichBetsBool = currentRound->value % 2;
     auto whichBets = whichBetsBool ? BETS0 : BETS1;
 
     auto onceBetAmountItr = _gambling_table.find(whichBets);
-	//TODO deal with nil
     uint64_t tempTotalAmount = onceBetAmountItr->value + totalAmount;
     print("tempTotal->",tempTotalAmount);
     eosio_assert(tempTotalAmount > SINGLE_BET_AMOUNT,"Bet Pool is over!");
@@ -128,22 +129,27 @@ void sicbo::transfer(name from,name to,asset quanity,string memo){
     }
 
 
-    sicbo::betStart(from,quanity,playload);
-    //TODO 发送佣金(wrapper)
+    //bet in
+    //sicbo::aaaa(from,quanity,playload);
+    action(
+      permission_level{ _self, "active"_n },
+      _self, "aaaa"_n,
+      std::make_tuple(from, quanity, playload)
+).send();
+
+    //发送佣金(wrapper)
+    quanity.set_amount(amt * 0.002);
+    print("payfor inviter: ",quanity);
+    action(
+      permission_level{ get_self(), "active"_n },
+      "test.token"_n, "transfer"_n,
+      std::make_tuple(_self, inviter,quanity , std::string("[BUG]From Inviter bounds"))
+).send();
 
 }
 
-void sicbo::payForInviter(){
-    require_auth(_self);
-    return;
-    //TODO
-}
-
-void sicbo::betStart(name from,asset quanity,vector<uint8_t> playload){
-	print("start bet!");
+void sicbo::aaaa(name from,asset quanity,vector<uint8_t> playload){
     //require_auth(_self);
-    //TODO require_auth(who)
-    //TODO stake table add a bet id
     auto betRound = _gambling_table.find(ROUND);
     auto Round = betRound->value;
     print("Round->",Round);
@@ -192,29 +198,13 @@ bool sicbo::isNum(string str)
 
 int sicbo::checkAndChange(string item){
     if (sicbo::isNum(item)){
-        return stod(item.c_str());
+        return atoi(item.c_str());
     }
     else{
         return -1;
     }
 }
 
-//bool sicbo::isNum(string str)
-//{
-//    stringstream sin(str);
-//    double d;
-//    char c;
-//    if(!(sin >> d))
-//    {   
-//        return false;
-//    }
-//    if (sin >> c)
-//    {   
-//        return false;
-//    }
-//    return true;
-//}
-//
 void sicbo::split(const string& s,vector<string>& sv,const char flag = ',') {
     sv.clear();
     istringstream iss(s);
@@ -296,24 +286,27 @@ void sicbo::dice(uint8_t face) {
                         ).send();
                 }
 
-                this_table.erase(s);
         }
+	for (auto& sss : this_table) {
+		auto ss = this_table.find(sss._player.value);
+                this_table.erase(ss);
+	}
 
         init(this_bets, 0);
 }
 
-void sicbo::start() {
-        require_auth(BUGXIO);
-
-        init(VERSION,  SICBO_VERSION);
-        init(ROUND,    0);
-        init(SEASON,   1);
-        init(BETS0,    0);
-        init(BETS1,    0);
-        init(GAMELOCK, 1);
-	print("good");
-	init_stake();
-}
+//void sicbo::start() {
+//        require_auth(BUGXIO);
+//
+//        init(VERSION,  SICBO_VERSION);
+//        init(ROUND,    0);
+//        init(SEASON,   1);
+//        init(BETS0,    0);
+//        init(BETS1,    0);
+//        init(GAMELOCK, 1);
+//	print("good");
+//	init_stake();
+//}
 
 void sicbo::pause() {
         require_auth(BUGXIO);
